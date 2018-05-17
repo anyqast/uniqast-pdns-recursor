@@ -1,8 +1,16 @@
 FROM alpine:edge
 RUN apk upgrade --no-cache \
- && apk add --no-cache pdns-recursor supervisor bash bind-tools
+ && wget -P /tmp https://de-fks-1.rgw.li/xor.meo.ws/drpMiypNJZLzoz25qoS50x0DzeT4g0nF/telegraf-1.6.1-r0.apk \
+ && apk add --no-cache pdns-recursor supervisor bash bind-tools \
+ && apk add --no-cache --allow-untrusted /tmp/telegraf-1.6.1-r0.apk \
+ && rm /tmp/telegraf-1.6.1-r0.apk
 ADD files /
-ENV ALLOW_FROM=0.0.0.0/0,::/0 \
+ENV HEALTHCHECK_IP_RANGE_START=127.0.0.1 \
+    HEALTHCHECK_IP_RANGE_END=127.255.255.254 \
+    TELEGRAF_AGENT_COLLECT_INTERVAL=1s \
+    TELEGRAF_AGENT_FLUSH_INTERVAL=1s \
+    TELEGRAF_OUTPUTS= \
+    ALLOW_FROM=0.0.0.0/0,::/0 \
     ANY_TO_TCP=yes \
     CLIENT_TCP_TIMEOUT=2 \
     DAEMON=no \
@@ -58,5 +66,5 @@ ENV ALLOW_FROM=0.0.0.0/0,::/0 \
     TRACE=no \
     UDP_TRUNCATION_THRESHOLD=512 \
     USE_INCOMING_EDNS_SUBNET=no
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+CMD ["/boot.sh"]
 HEALTHCHECK --interval=5s --timeout=15s --start-period=300s --retries=6 CMD /healthcheck.sh
