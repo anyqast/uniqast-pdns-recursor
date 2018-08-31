@@ -1,9 +1,6 @@
 FROM alpine:edge
 RUN apk upgrade --no-cache \
- && wget -P /tmp https://de-fks-1.rgw.li/xor.meo.ws/drpMiypNJZLzoz25qoS50x0DzeT4g0nF/telegraf-1.6.1-r0.apk \
- && apk add --no-cache pdns-recursor supervisor bash bind-tools \
- && apk add --no-cache --allow-untrusted /tmp/telegraf-1.6.1-r0.apk \
- && rm /tmp/telegraf-1.6.1-r0.apk
+ && apk add --no-cache pdns-recursor supervisor bash bind-tools telegraf
 ADD files /
 ENV HEALTHCHECK_IP_RANGE_START=127.0.0.1 \
     HEALTHCHECK_IP_RANGE_END=127.255.255.254 \
