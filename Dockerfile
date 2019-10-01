@@ -64,6 +64,7 @@ ENV HEALTHCHECK_IP_RANGE_START=127.0.0.1 \
     THREADS=8 \
     TRACE=no \
     UDP_TRUNCATION_THRESHOLD=512 \
-    USE_INCOMING_EDNS_SUBNET=no
+    USE_INCOMING_EDNS_SUBNET=no \
+    ENV_FORWARD_ZONES_FILE=
 CMD ["/boot.sh"]
 HEALTHCHECK --interval=5s --timeout=15s --start-period=300s --retries=6 CMD /healthcheck.sh
